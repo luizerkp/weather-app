@@ -1,0 +1,61 @@
+body {
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #f1eeee;
+    font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
+} 
+
+.header {
+  height: 100px;
+  background-color: black;
+}
+
+#main-container {
+  flex: 1 0 auto;
+  background-color: white;
+}
+
+/* Sticky Footer and credit */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    height: 50px;
+    gap: 8px;
+    font-weight: bold;
+    color: black;
+    background-color: #0c4a6e;
+}
+
+#github-logo {
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+/* ########################################## Responsive layout ########################################################*/
+/* @media only screen and (max-width: 1200px) {
+
+}
+
+@media only screen and (max-width: 650px) {
+
+}
+
+@media only screen and (max-width: 500px) {
+
+    #github-logo>img {
+        height: 20px;
+        width: 20px;
+    }
+}
+
+ @media only screen and (max-width: 325px) {
+
+    .footer>p {
+        font-size: 14px;
+        margin: 8px;
+    }
+ } */

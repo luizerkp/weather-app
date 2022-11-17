@@ -1,0 +1,13 @@
+﻿{
+	"folders": [
+		{
+			"path": "../../repos/weather-app/"
+		}
+  ],
+  "settings": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+  },
+  "eslint.validate": ["javascript"]
+  }
+}
