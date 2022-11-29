@@ -7,10 +7,24 @@ import "./imgs/partially-cloudy.webp";
 import "./imgs/rainy.webp";
 import "./imgs/sunny.webp";
 import "./imgs/thunderstorm.webp";
-import weatherInfoAPIRequest from "./weather-info";
+import { weatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
 
-const city = "Auburn";
-weatherInfoAPIRequest.getWeather(city);
+function handleError(error) {
+  console.log(error);
+}
+
+(async () => {
+  let cities;
+  const searchTerm = "";
+  try {
+    cities = await geocodingAPIRequest.getGeocoding(searchTerm);
+  } catch (error) {
+    return handleError(error);
+  }
+  return console.log(cities);
+})();
+
+// weatherInfoAPIRequest.getWeather(city);
 
 // buildPageContent
 (() => {
