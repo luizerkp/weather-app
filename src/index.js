@@ -15,13 +15,22 @@ function handleError(error) {
 
 (async () => {
   let cities;
-  const searchTerm = "";
+  const searchTerm = "New York";
   try {
     cities = await geocodingAPIRequest.getGeocoding(searchTerm);
   } catch (error) {
     return handleError(error);
   }
-  return console.log(cities);
+
+  let currentLocalWeather;
+  console.log(cities);
+  try {
+    currentLocalWeather = await weatherInfoAPIRequest.getCurrentWeather(cities[0].lat, cities[0].lon);
+  } catch (error) {
+    return handleError(error);
+  }
+  // return console.log(currentLocalWeather);
+  // return console.log(cities);
 })();
 
 // weatherInfoAPIRequest.getWeather(city);

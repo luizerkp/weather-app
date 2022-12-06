@@ -1,3 +1,5 @@
+// get Weather icons `http://openweathermap.org/img/w/${icon}.png`
+
 const geocodingAPIRequest = (() => {
   const limit = 5;
   const APIKey = "W4cIzkPzZLkpSBNgL3geH4JyljGuNRYD";
@@ -49,11 +51,9 @@ const geocodingAPIRequest = (() => {
       throw new Error("Results Empty");
     }
 
-    console.log(geocoderAPIResponseData.results);
+    const geocodeInfo = processGeoData(geocoderAPIResponseData.results);
 
-    const geocodeinfo = processGeoData(geocoderAPIResponseData.results);
-
-    return geocodeinfo;
+    return geocodeInfo;
   };
   return {
     getGeocoding,
@@ -74,9 +74,62 @@ const weatherInfoAPIRequest = (() => {
   //     return handleError(error);
   //   }
   // };
-  // return {
-  //   getWeather,
-  // };
+  const APIKey = "02fc8c5e0612a90cae215d46fdd00bdc";
+  const roundObjValues = (obj) => {
+    if (typeof obj !== "object") {
+      return obj;
+    }
+
+    const roundedObjValues = {};
+    Object.entries(obj).forEach(([key, value]) => {
+      const roundedValue = {};
+      roundedValue[key] = Math.round(value);
+      Object.assign(roundedObjValues, roundedValue);
+    });
+
+    return roundedObjValues;
+  };
+  const processWeatherData = (data) => {
+    console.log(data);
+    const cleanedWeatherData = {
+      main: roundObjValues(data.main),
+      wind: roundObjValues(data.wind),
+      weather: data.weather,
+      visibility: data.visibility,
+      sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+      sunset: new Date(data.sys.sunset * 1000 + data.timezone).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+    console.log(cleanedWeatherData);
+  };
+
+  const getCurrentWeather = async (lat, lon, units = "imperial") => {
+    let weatherAPIResponse;
+    try {
+      weatherAPIResponse = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKey}&units=${units}`,
+        { mode: "cors" }
+      );
+      if (!weatherAPIResponse.ok) {
+        throw new Error(weatherAPIResponse.status);
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+    const currentWeatherData = await weatherAPIResponse.json();
+    const sunrise = new Date((currentWeatherData.sys.sunrise + currentWeatherData.timezone) * 1000);
+    console.log(sunrise);
+    const currentWeatherInfo = processWeatherData(currentWeatherData);
+    console.log(currentWeatherInfo);
+  };
+  return {
+    getCurrentWeather,
+  };
 })();
 
 export { weatherInfoAPIRequest, geocodingAPIRequest };
