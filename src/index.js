@@ -15,7 +15,7 @@ function handleError(error) {
 
 (async () => {
   let cities;
-  const searchTerm = "New York";
+  const searchTerm = "auburn";
   try {
     cities = await geocodingAPIRequest.getGeocoding(searchTerm);
   } catch (error) {
@@ -29,7 +29,15 @@ function handleError(error) {
   } catch (error) {
     return handleError(error);
   }
-  // return console.log(currentLocalWeather);
+
+  let fiveDayForcast;
+  try {
+    fiveDayForcast = await weatherInfoAPIRequest.getFiveDayForcast(cities[0].lat, cities[0].lon);
+  } catch (error) {
+    return handleError(error);
+  }
+
+  return console.log(currentLocalWeather);
   // return console.log(cities);
 })();
 

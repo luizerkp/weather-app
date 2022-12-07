@@ -1,22 +1,15 @@
+import { DateTime } from "luxon";
+
 // get Weather icons `http://openweathermap.org/img/w/${icon}.png`
 
 const geocodingAPIRequest = (() => {
-  const limit = 5;
+  const limit = 1;
   const APIKey = "W4cIzkPzZLkpSBNgL3geH4JyljGuNRYD";
-
-  // gecoding api to get lat & lon for up to 5 city with same name `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=${limit}&appid=${APIKey}`
-
-  // `https://api.tomtom.com/search/2/geocode/${city}.json?key=${APIKey}&limit=${limit}`
-
-  // openweather current weather api `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${APIKey}`
 
   // openweather 5 day forcast api api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid={API key}
 
-  //   const handleError = (err) => {
-
-  // }
-
   const processGeoData = (results) => {
+    // console.log(results);
     const cleanedData = [];
     results.forEach((result) => {
       const locationObj = {
@@ -61,19 +54,6 @@ const geocodingAPIRequest = (() => {
 })();
 
 const weatherInfoAPIRequest = (() => {
-  // const getCurrentWeather = async (cities) => {
-  // }
-  // const getFiveDayForcast = async (cities) => {
-  // }
-  // const getWeather = async (city) => {
-  //   let citiesLocationInfo;
-  //   try {
-  //     citiesLocationInfo = await geocodingAPIRequest.getGeocoding(city);
-  //     return console.log(citiesLocationInfo);
-  //   } catch (error) {
-  //     return handleError(error);
-  //   }
-  // };
   const APIKey = "02fc8c5e0612a90cae215d46fdd00bdc";
   const roundObjValues = (obj) => {
     if (typeof obj !== "object") {
@@ -89,23 +69,30 @@ const weatherInfoAPIRequest = (() => {
 
     return roundedObjValues;
   };
+  const parseForcastData = (data) => {
+    let count = 1;
+    const fiveDayData = {
+      day1: [],
+      day2: [],
+      day3: [],
+      day4: [],
+      day5: [],
+    };
+  };
   const processWeatherData = (data) => {
-    console.log(data);
     const cleanedWeatherData = {
       main: roundObjValues(data.main),
       wind: roundObjValues(data.wind),
       weather: data.weather,
       visibility: data.visibility,
-      sunrise: new Date(data.sys.sunrise * 1000).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
-      sunset: new Date(data.sys.sunset * 1000 + data.timezone).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      }),
+      sunrise: DateTime.fromSeconds(data.sys.sunrise + data.timezone, {
+        zone: "UTC",
+      }).toLocaleString(DateTime.TIME_SIMPLE),
+      sunset: DateTime.fromSeconds(data.sys.sunset + data.timezone, {
+        zone: "UTC",
+      }).toLocaleString(DateTime.TIME_SIMPLE),
     };
-    console.log(cleanedWeatherData);
+    return cleanedWeatherData;
   };
 
   const getCurrentWeather = async (lat, lon, units = "imperial") => {
@@ -122,13 +109,29 @@ const weatherInfoAPIRequest = (() => {
       throw new Error(error);
     }
     const currentWeatherData = await weatherAPIResponse.json();
-    const sunrise = new Date((currentWeatherData.sys.sunrise + currentWeatherData.timezone) * 1000);
-    console.log(sunrise);
     const currentWeatherInfo = processWeatherData(currentWeatherData);
-    console.log(currentWeatherInfo);
+    return currentWeatherInfo;
+  };
+
+  const getFiveDayForcast = async (lat, lon, units = "imperial") => {
+    let weatherAPIResponse;
+    try {
+      weatherAPIResponse = await fetch(
+        `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}&units=${units}`,
+        { mode: "cors" }
+      );
+      if (!weatherAPIResponse.ok) {
+        throw new Error(weatherAPIResponse.status);
+      }
+    } catch (error) {
+      throw new Error(error);
+    }
+    const fiveDayWeatherData = await weatherAPIResponse.json();
+    console.log(fiveDayWeatherData);
   };
   return {
     getCurrentWeather,
+    getFiveDayForcast,
   };
 })();
 

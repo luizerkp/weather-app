@@ -7,6 +7,9 @@ module.exports = {
   entry: "./src/index.js",
   plugins: [
     new CircularDependencyPlugin({
+      // exclude detection of files based on a RegExp
+      // exlucdes luxon due to known circular dependnecies in package
+      exclude: /luxon/,
       // `onStart` is called before the cycle detection starts
       onStart({ compilation }) {
         console.log("start detecting webpack modules cycles");
