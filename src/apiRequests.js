@@ -6,8 +6,6 @@ const geocodingAPIRequest = (() => {
   const limit = 1;
   const APIKey = "W4cIzkPzZLkpSBNgL3geH4JyljGuNRYD";
 
-  // openweather 5 day forcast api api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid={API key}
-
   const processGeoData = (results) => {
     // console.log(results);
     const cleanedData = [];
@@ -69,8 +67,24 @@ const weatherInfoAPIRequest = (() => {
 
     return roundedObjValues;
   };
-  const parseForcastData = (data) => {
-    let count = 1;
+
+  const cleanForcastMainData = (data) => {
+    const cleanedData = {
+      temp_max: data.temp_max,
+      temp_min: data.temp_min,
+      feels_like: data.feels_like,
+    };
+    // in Five day forcast temp_max is alwasy equal to temp but not in current weather
+    if (data.temp !== data.temp_max) {
+      cleanedData.temp = data.temp;
+    }
+    return cleanedData;
+  };
+
+  const parseFiveDayForcastData = (data) => {
+    // console.log(data);
+    // console.log(timezone);
+    let count = 0;
     const fiveDayData = {
       day1: [],
       day2: [],
@@ -78,10 +92,59 @@ const weatherInfoAPIRequest = (() => {
       day4: [],
       day5: [],
     };
+
+    Object.entries(fiveDayData).forEach(([key]) => {
+      for (let i = 0; i < 8; i += 1) {
+        const relevantData = {
+          date: data[count].dt,
+          main: roundObjValues(cleanForcastMainData(data[count].main)),
+          weather: data[count].weather,
+        };
+        fiveDayData[key].push(relevantData);
+        count += 1;
+      }
+    });
+
+    return fiveDayData;
+  };
+  const processForcastData = (data, timezone) => {
+    const fiveDayCleanedForcast = {};
+    Object.entries(data).forEach(([key, value]) => {
+      const len = value.length;
+      const day = DateTime.fromSeconds(value[0].date + timezone, {
+        zone: "UTC",
+      }).weekdayLong;
+
+      const weatherStart = value[0].weather;
+      const weatherEnd = value[len - 1].weather;
+
+      let highestMaxTemp = Number.NEGATIVE_INFINITY;
+      let lowestMinTemp = Number.POSITIVE_INFINITY;
+      let highestFeelsLike = Number.NEGATIVE_INFINITY;
+      value.forEach((item) => {
+        highestMaxTemp = item.main.temp_max > highestMaxTemp ? item.main.temp_max : highestMaxTemp;
+        lowestMinTemp = item.main.temp_min < lowestMinTemp ? item.main.temp_min : lowestMinTemp;
+        highestFeelsLike = item.main.feels_like > highestFeelsLike ? item.main.feels_like : highestFeelsLike;
+      });
+      const cleanedData = {
+        day,
+        temp: { temp_max: highestMaxTemp, temp_min: lowestMinTemp, feels_like: highestFeelsLike },
+        weather: { start: weatherStart, end: weatherEnd },
+      };
+      fiveDayCleanedForcast[key] = cleanedData;
+      // console.log(`high: ${highestMaxTemp}`);
+      // console.log(`low: ${lowestMinTemp}`);
+      // console.log(`highest FL: ${highestFeelsLike}`);
+      // console.log(weatherStart, weatherEnd);
+
+      // console.log(day);
+      // console.log(key, value);
+    });
+    return fiveDayCleanedForcast;
   };
   const processWeatherData = (data) => {
     const cleanedWeatherData = {
-      main: roundObjValues(data.main),
+      temp: roundObjValues(cleanForcastMainData(data.main)),
       wind: roundObjValues(data.wind),
       weather: data.weather,
       visibility: data.visibility,
@@ -109,6 +172,7 @@ const weatherInfoAPIRequest = (() => {
       throw new Error(error);
     }
     const currentWeatherData = await weatherAPIResponse.json();
+    console.log(currentWeatherData);
     const currentWeatherInfo = processWeatherData(currentWeatherData);
     return currentWeatherInfo;
   };
@@ -128,6 +192,11 @@ const weatherInfoAPIRequest = (() => {
     }
     const fiveDayWeatherData = await weatherAPIResponse.json();
     console.log(fiveDayWeatherData);
+    const parsedFiveDayData = parseFiveDayForcastData(fiveDayWeatherData.list);
+    const cleanedForcastInfo = processForcastData(parsedFiveDayData, fiveDayWeatherData.city.timezone);
+    // console.log(parsedFiveDayData);
+    // console.log(cleanedForcastInfo);
+    return cleanedForcastInfo;
   };
   return {
     getCurrentWeather,

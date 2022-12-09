@@ -36,9 +36,8 @@ function handleError(error) {
   } catch (error) {
     return handleError(error);
   }
-
-  return console.log(currentLocalWeather);
-  // return console.log(cities);
+  console.log("Current Weather: ", currentLocalWeather);
+  return console.log("Five Day Forcast: ", fiveDayForcast);
 })();
 
 // weatherInfoAPIRequest.getWeather(city);
