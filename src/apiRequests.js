@@ -131,6 +131,7 @@ const weatherInfoAPIRequest = (() => {
         temp: { temp_max: highestMaxTemp, temp_min: lowestMinTemp, feels_like: highestFeelsLike },
         weather: { start: weatherStart, end: weatherEnd },
       };
+
       fiveDayCleanedForcast[key] = cleanedData;
       // console.log(`high: ${highestMaxTemp}`);
       // console.log(`low: ${lowestMinTemp}`);
@@ -172,7 +173,7 @@ const weatherInfoAPIRequest = (() => {
       throw new Error(error);
     }
     const currentWeatherData = await weatherAPIResponse.json();
-    console.log(currentWeatherData);
+    // console.log(currentWeatherData);
     const currentWeatherInfo = processWeatherData(currentWeatherData);
     return currentWeatherInfo;
   };
@@ -191,7 +192,7 @@ const weatherInfoAPIRequest = (() => {
       throw new Error(error);
     }
     const fiveDayWeatherData = await weatherAPIResponse.json();
-    console.log(fiveDayWeatherData);
+    // console.log(fiveDayWeatherData);
     const parsedFiveDayData = parseFiveDayForcastData(fiveDayWeatherData.list);
     const cleanedForcastInfo = processForcastData(parsedFiveDayData, fiveDayWeatherData.city.timezone);
     // console.log(parsedFiveDayData);
