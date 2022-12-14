@@ -10,15 +10,16 @@ import "./imgs/thunderstorm.webp";
 import { weatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
 
 function handleError(error) {
-  console.log(error);
+  console.log(error.message);
 }
 
 (async () => {
   let cities;
-  const searchTerm = "Auburn";
+  const searchTerm = "";
   try {
     cities = await geocodingAPIRequest.getGeocoding(searchTerm);
   } catch (error) {
+    console.log(error.errorText);
     return handleError(error);
   }
 
@@ -40,9 +41,7 @@ function handleError(error) {
   return console.log("Five Day Forcast: ", fiveDayForcast);
 })();
 
-// weatherInfoAPIRequest.getWeather(city);
-
-// buildPageContent
+// buildPageFooterContent
 (() => {
   footer.buildFooter();
 })();

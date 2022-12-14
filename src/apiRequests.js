@@ -33,7 +33,8 @@ const geocodingAPIRequest = (() => {
         throw new Error(geocoderAPIResponse.status);
       }
     } catch (error) {
-      throw new Error(error);
+      const err = await geocoderAPIResponse.json();
+      throw new Error(err.errorText);
     }
 
     const geocoderAPIResponseData = await geocoderAPIResponse.json();
