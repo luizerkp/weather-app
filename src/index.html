@@ -5,6 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Weather.app</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Prevent flash of unstyled content and oppacity 0 elements from showing on load-->
+    <style>html{display:none}</style>
   </head>
   <body>
     <header class="header">
@@ -13,9 +15,9 @@
         <button type="submit" id="search-btn"><span class="material-icons-round" id="search-icon">search</span></button>
       </form>
     </header>
-    <div id="main-container">
+    <main id="main-container">
       <div><h1>This is a test to check font color</h1></div>
       <div class="detailed-view hidden"> <h1>This Stuff is hidden for now</h1></div>
-    </div>
+    </main>
   </body>
 </html>

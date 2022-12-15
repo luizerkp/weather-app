@@ -22,7 +22,7 @@ const geocodingAPIRequest = (() => {
   };
 
   // lat & lon for up to five cities
-  const getGeocoding = async (city) => {
+  const fetchGeocoding = async (city) => {
     let geocoderAPIResponse;
     try {
       geocoderAPIResponse = await fetch(
@@ -33,8 +33,7 @@ const geocodingAPIRequest = (() => {
         throw new Error(geocoderAPIResponse.status);
       }
     } catch (error) {
-      const err = await geocoderAPIResponse.json();
-      throw new Error(err.errorText);
+      throw new Error(`httpStatusCode: ${error.message}`);
     }
 
     const geocoderAPIResponseData = await geocoderAPIResponse.json();
@@ -48,7 +47,7 @@ const geocodingAPIRequest = (() => {
     return geocodeInfo;
   };
   return {
-    getGeocoding,
+    fetchGeocoding,
   };
 })();
 
@@ -144,12 +143,40 @@ const weatherInfoAPIRequest = (() => {
     });
     return fiveDayCleanedForcast;
   };
+
+  const convertToCardinalDirection = (deg) => {
+    const directions = [
+      "N",
+      "NNE",
+      "NE",
+      "ENE",
+      "E",
+      "ESE",
+      "SE",
+      "SSE",
+      "S",
+      "SSE",
+      "SW",
+      "WSW",
+      "W",
+      "WNW",
+      "NW",
+      "NNW",
+    ];
+    const directionIndex = Math.round(deg / 22.5) % 16;
+
+    return directions[directionIndex];
+  };
+
   const processWeatherData = (data) => {
     const cleanedWeatherData = {
       temp: roundObjValues(cleanForcastMainData(data.main)),
-      wind: roundObjValues(data.wind),
+      wind: {
+        speed: Math.round(data.wind.speed),
+        direction: convertToCardinalDirection(data.wind.deg),
+      },
       weather: data.weather,
-      visibility: data.visibility,
+      humidity: data.main.humidity,
       sunrise: DateTime.fromSeconds(data.sys.sunrise + data.timezone, {
         zone: "UTC",
       }).toLocaleString(DateTime.TIME_SIMPLE),
@@ -160,7 +187,7 @@ const weatherInfoAPIRequest = (() => {
     return cleanedWeatherData;
   };
 
-  const getCurrentWeather = async (lat, lon, units = "imperial") => {
+  const fetchCurrentWeather = async (lat, lon, units = "imperial") => {
     let weatherAPIResponse;
     try {
       weatherAPIResponse = await fetch(
@@ -171,16 +198,17 @@ const weatherInfoAPIRequest = (() => {
         throw new Error(weatherAPIResponse.status);
       }
     } catch (error) {
-      throw new Error(error);
+      throw new Error(`httpStatusCode: ${error.message}`);
     }
     const currentWeatherData = await weatherAPIResponse.json();
-    // console.log(currentWeatherData);
+    console.log(currentWeatherData);
     const currentWeatherInfo = processWeatherData(currentWeatherData);
     return currentWeatherInfo;
   };
 
-  const getFiveDayForcast = async (lat, lon, units = "imperial") => {
+  const fetchFiveDayForcast = async (lat, lon) => {
     let weatherAPIResponse;
+    const units = "imperial";
     try {
       weatherAPIResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}&units=${units}`,
@@ -190,7 +218,7 @@ const weatherInfoAPIRequest = (() => {
         throw new Error(weatherAPIResponse.status);
       }
     } catch (error) {
-      throw new Error(error);
+      throw new Error(`httpStatusCode: ${error.message}`);
     }
     const fiveDayWeatherData = await weatherAPIResponse.json();
     // console.log(fiveDayWeatherData);
@@ -201,8 +229,8 @@ const weatherInfoAPIRequest = (() => {
     return cleanedForcastInfo;
   };
   return {
-    getCurrentWeather,
-    getFiveDayForcast,
+    fetchCurrentWeather,
+    fetchFiveDayForcast,
   };
 })();
 

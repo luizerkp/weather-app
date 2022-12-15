@@ -15,25 +15,25 @@ function handleError(error) {
 
 (async () => {
   let cities;
-  const searchTerm = "";
+  const searchTerm = "Auburn";
   try {
-    cities = await geocodingAPIRequest.getGeocoding(searchTerm);
+    cities = await geocodingAPIRequest.fetchGeocoding(searchTerm);
   } catch (error) {
-    console.log(error.errorText);
+    console.log(error.message);
     return handleError(error);
   }
 
   let currentLocalWeather;
   // console.log(cities);
   try {
-    currentLocalWeather = await weatherInfoAPIRequest.getCurrentWeather(cities[0].lat, cities[0].lon);
+    currentLocalWeather = await weatherInfoAPIRequest.fetchCurrentWeather(cities[0].lat, cities[0].lon);
   } catch (error) {
     return handleError(error);
   }
 
   let fiveDayForcast;
   try {
-    fiveDayForcast = await weatherInfoAPIRequest.getFiveDayForcast(cities[0].lat, cities[0].lon);
+    fiveDayForcast = await weatherInfoAPIRequest.fetchFiveDayForcast(cities[0].lat, cities[0].lon);
   } catch (error) {
     return handleError(error);
   }
