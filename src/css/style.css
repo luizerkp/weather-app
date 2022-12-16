@@ -3,7 +3,6 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    /* background-color: #f1eeee; */
     background-image: url('../imgs/default.webp');
     background-position: center;
     background-repeat: no-repeat;
@@ -16,31 +15,44 @@ body {
 
 .header {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: center;
   margin: 1rem;
+  padding: 1rem;
+}
+
+.logo-div {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo {
+  height: 44px;
 }
 
 .hidden {
   opacity: 0;
   height: 0;
 }
+
 #search-form {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
 }
+
 #search-bar {
-  height: 1.5rem;
   border: none;
   outline: none;
-  font-size: 1.25rem;
+  font-size: 1rem;
   border-radius: .5rem;
   font-weight: bold;
   background: rgba(255, 255, 255, 0.2);
   color: white;
-  padding: .75rem;
+  padding: 1rem;
 }
 
 #search-bar::placeholder {
@@ -63,6 +75,9 @@ body {
   flex: 1 0 auto;
 }
 
+ul {
+  list-style: none;
+}
 /* Sticky Footer and credit */
 .footer {
     display: flex;

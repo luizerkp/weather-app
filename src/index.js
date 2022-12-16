@@ -8,40 +8,102 @@ import "./imgs/rainy.webp";
 import "./imgs/sunny.webp";
 import "./imgs/thunderstorm.webp";
 import { weatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
+import handleWeatherDataDisplay from "./displayWeatherData";
 
 function handleError(error) {
   console.log(error.message);
 }
 
-(async () => {
-  let cities;
-  const searchTerm = "Auburn";
+const getFiveDayForcast = async (lat, lon) => {
+  let fiveDayForcast;
   try {
-    cities = await geocodingAPIRequest.fetchGeocoding(searchTerm);
+    fiveDayForcast = await weatherInfoAPIRequest.fetchFiveDayForcast(lat, lon);
+  } catch (error) {
+    return handleError(error);
+  }
+  return fiveDayForcast;
+};
+const getCurrentWeather = async (lat, lon) => {
+  let currentLocalWeather;
+  // console.log(city);
+  try {
+    currentLocalWeather = await weatherInfoAPIRequest.fetchCurrentWeather(lat, lon);
+  } catch (error) {
+    return handleError(error);
+  }
+  return currentLocalWeather;
+};
+const getCityGeocodeInfo = async (searchTerm) => {
+  let city;
+  try {
+    city = await geocodingAPIRequest.fetchGeocoding(searchTerm);
   } catch (error) {
     console.log(error.message);
     return handleError(error);
   }
 
-  let currentLocalWeather;
-  // console.log(cities);
-  try {
-    currentLocalWeather = await weatherInfoAPIRequest.fetchCurrentWeather(cities[0].lat, cities[0].lon);
-  } catch (error) {
-    return handleError(error);
-  }
+  return city;
+};
 
-  let fiveDayForcast;
-  try {
-    fiveDayForcast = await weatherInfoAPIRequest.fetchFiveDayForcast(cities[0].lat, cities[0].lon);
-  } catch (error) {
-    return handleError(error);
-  }
-  console.log("Current Weather: ", currentLocalWeather);
-  return console.log("Five Day Forcast: ", fiveDayForcast);
-})();
+const getCityWeatherInfo = async (searchTerm) => {
+  const cityGeocodingInfo = await getCityGeocodeInfo(searchTerm);
+  const { city } = cityGeocodingInfo[0];
+  const { lat } = cityGeocodingInfo[0];
+  const { lon } = cityGeocodingInfo[0];
+  const currentWeather = await getCurrentWeather(lat, lon);
+  const fiveDayWatherForcastData = await getFiveDayForcast(lat, lon);
 
-// buildPageFooterContent
+  return handleWeatherDataDisplay.displayWeather(city, currentWeather, fiveDayWatherForcastData);
+};
+
+const searchEventHandler = () => {
+  const searchForm = document.querySelector("#search-form");
+  const searchBar = document.querySelector("#search-bar");
+  searchForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const searchQuery = searchBar.value.trim();
+    if (searchQuery.length < 1) {
+      return;
+    }
+    getCityWeatherInfo(searchQuery);
+  });
+};
+
 (() => {
+  const defaultCity = "Auburn, WA";
+  getCityWeatherInfo(defaultCity);
+
+  // buildPageFooterContent
   footer.buildFooter();
+
+  // add event listeners
+  searchEventHandler();
 })();
+
+// (async () => {
+//   let city;
+//   const searchTerm = "Auburn wa";
+//   try {
+//     city = await geocodingAPIRequest.fetchGeocoding(searchTerm);
+//   } catch (error) {
+//     console.log(error.message);
+//     return handleError(error);
+//   }
+
+//   let currentLocalWeather;
+//   // console.log(city);
+//   try {
+//     currentLocalWeather = await weatherInfoAPIRequest.fetchCurrentWeather(city[0].lat, city[0].lon);
+//   } catch (error) {
+//     return handleError(error);
+//   }
+
+//   let fiveDayForcast;
+//   try {
+//     fiveDayForcast = await weatherInfoAPIRequest.fetchFiveDayForcast(city[0].lat, city[0].lon);
+//   } catch (error) {
+//     return handleError(error);
+//   }
+//   console.log("Current Weather: ", currentLocalWeather);
+//   return console.log("Five Day Forcast: ", fiveDayForcast);
+// })();

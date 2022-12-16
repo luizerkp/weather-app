@@ -170,7 +170,7 @@ const weatherInfoAPIRequest = (() => {
 
   const processWeatherData = (data) => {
     const cleanedWeatherData = {
-      temp: roundObjValues(cleanForcastMainData(data.main)),
+      main: roundObjValues(cleanForcastMainData(data.main)),
       wind: {
         speed: Math.round(data.wind.speed),
         direction: convertToCardinalDirection(data.wind.deg),

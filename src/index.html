@@ -10,13 +10,28 @@
   </head>
   <body>
     <header class="header">
-      <form id="search-form">
-        <input type="text" name="search-bar" id ="search-bar"required placeholder="Weather in your city">
+      <div class="logo-div">
+        <img class="logo" src="imgs/logo.png" alt="logo representing a rinsing sun">
+        <h1>The Weather App</h1>
+      </div>
+      <form id="search-form" role="search">
+        <input type="search" name="search-bar" id ="search-bar" required 
+        placeholder="Weather in your city"
+        aria-label="Search for Weather conditions in input City">
         <button type="submit" id="search-btn"><span class="material-icons-round" id="search-icon">search</span></button>
       </form>
     </header>
     <main id="main-container">
-      <div><h1>This is a test to check font color</h1></div>
+      <div class="current-weather-info">
+        <div class="primary-weather-info">
+          <h2 class="city-name"></h2>
+          <p  class="weather-conditions"></p>
+          <p class="temperature"></p>
+        </div>
+        <div class="secondary-weather-info" >
+        </div>        
+      </div>
+
       <div class="detailed-view hidden"> <h1>This Stuff is hidden for now</h1></div>
     </main>
   </body>
