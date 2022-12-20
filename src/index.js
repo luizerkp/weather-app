@@ -2,11 +2,11 @@ import "./css/normalize.css";
 import "material-icons/iconfont/round.css";
 import "./css/style.css";
 import footer from "./footerContent";
-import "./imgs/overcast.webp";
-import "./imgs/partially-cloudy.webp";
-import "./imgs/rainy.webp";
-import "./imgs/sunny.webp";
-import "./imgs/thunderstorm.webp";
+// import "./imgs/overcast.webp";
+// import "./imgs/partially-cloudy.webp";
+// import "./imgs/rainy.webp";
+// import "./imgs/sunny.webp";
+// import "./imgs/thunderstorm.webp";
 import { weatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
 import handleWeatherDataDisplay from "./displayWeatherData";
 
@@ -69,7 +69,32 @@ const searchEventHandler = () => {
   });
 };
 
+const unitSelectionEventHandler = () => {
+  const fahrenheitBtn = document.querySelector(".fahrenheit");
+  const celciusBtn = document.querySelector(".celcius");
+
+  // ensures only one btn is selected
+  const buttonClickHandler = (event, btnOne, btnTwo) => {
+    if (event.target.value === btnOne.value) {
+      btnOne.setAttribute("id", "selected");
+      btnTwo.removeAttribute("id");
+    } else {
+      btnTwo.setAttribute("id", "selected");
+      btnOne.removeAttribute("id");
+    }
+  };
+
+  fahrenheitBtn.addEventListener("click", (event) => {
+    buttonClickHandler(event, fahrenheitBtn, celciusBtn);
+  });
+
+  celciusBtn.addEventListener("click", (event) => {
+    buttonClickHandler(event, fahrenheitBtn, celciusBtn);
+  });
+};
+
 (() => {
+  // get default cities weather info for intial loadout
   const defaultCity = "Auburn, WA";
   getCityWeatherInfo(defaultCity);
 
@@ -78,6 +103,7 @@ const searchEventHandler = () => {
 
   // add event listeners
   searchEventHandler();
+  unitSelectionEventHandler();
 })();
 
 // (async () => {

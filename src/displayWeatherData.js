@@ -10,15 +10,20 @@ const displayForcast = (() => {
 const displayCurrent = (() => {
   const displayCurrentWeather = (city, currentWather) => {
     const sup = document.createElement("sup");
-    const fahrenheit = "\u2109";
-    // const celcius = "\u2103";
+    const units = {
+      fahrenheit: "\u2109",
+      celcius: "\u2103",
+    };
     const cityName = document.querySelector(".city-name");
     const weatherConditons = document.querySelector(".weather-conditions");
     const temperature = document.querySelector(".temperature");
+    const selectedUnit = document.querySelector("#selected").value;
+
     cityName.textContent = city;
     weatherConditons.textContent = currentWather.weather[0].description;
-    sup.textContent = fahrenheit;
-    temperature.innerHTML = currentWather.main.temp;
+
+    temperature.textContent = currentWather.main.temp;
+    sup.textContent = units.fahrenheit;
     temperature.appendChild(sup);
     console.log(city, currentWather);
   };
