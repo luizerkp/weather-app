@@ -3,6 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="apple-touch-icon" sizes="180x180" href="a3227b2efd06089c939d.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="77c1690ac0e483dbdb62.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="ca53f322d9562111e8ba.png">
+    <link rel="manifest" href="1c337fa2fa1515591f8d.webmanifest">
     <title>Weather.app</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Prevent flash of unstyled content and oppacity 0 elements from showing on load-->
@@ -14,6 +18,16 @@
         <img class="logo" src="73016b18965de85c6cf2.png" alt="logo representing a rinsing sun">
         <h1>The Weather App</h1>
       </div>
+      <div class="unit-select">
+        <div class="fahrenheit-select">
+          <input type="radio" name="&#8457;" data-symbol="\u2109" id="fahrenheit" checked>
+          <label for="&#8457;">&#8457;</label>          
+        </div>
+        <div class="clecius-select">
+          <input type="radio" name="&#8451;" data-symbol="\u2103" id="celcius">
+          <label for="">&#8451;</label>          
+        </div>
+      </div>             
       <form id="search-form" role="search">
         <input type="search" name="search-bar" id ="search-bar" required 
         placeholder="Weather in your city"
@@ -22,21 +36,16 @@
       </form>
     </header>
     <main id="main-container">
-      <div>
-        <h2></h2>
-        <p></p>
-        <p></p>
+      <div class="current-weather-info">
+        <div class="primary-weather-info">
+          <h2 class="city-name"></h2>
+          <p  class="weather-conditions"></p>
+          <p class="temperature"></p>
+        </div>
+        <div class="secondary-weather-info" >
+        </div>        
       </div>
-      <div>
-        <ul>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-          <li></li>
-        </ul>
-      </div>
+
       <div class="detailed-view hidden"> <h1>This Stuff is hidden for now</h1></div>
     </main>
   </body>
