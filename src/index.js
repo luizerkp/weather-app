@@ -2,11 +2,6 @@ import "./css/normalize.css";
 import "material-icons/iconfont/round.css";
 import "./css/style.css";
 import footer from "./footerContent";
-// import "./imgs/overcast.webp";
-// import "./imgs/partially-cloudy.webp";
-// import "./imgs/rainy.webp";
-// import "./imgs/sunny.webp";
-// import "./imgs/thunderstorm.webp";
 import { weatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
 import handleWeatherDataDisplay from "./displayWeatherData";
 
@@ -85,11 +80,19 @@ const unitSelectionEventHandler = () => {
   };
 
   fahrenheitBtn.addEventListener("click", (event) => {
-    buttonClickHandler(event, fahrenheitBtn, celciusBtn);
+    const currentUnit = document.querySelector("#selected").value;
+    if (currentUnit !== fahrenheitBtn.value) {
+      buttonClickHandler(event, fahrenheitBtn, celciusBtn);
+      handleWeatherDataDisplay.changeDisplayTempUnits();
+    }
   });
 
   celciusBtn.addEventListener("click", (event) => {
-    buttonClickHandler(event, fahrenheitBtn, celciusBtn);
+    const currentUnit = document.querySelector("#selected").value;
+    if (currentUnit !== celciusBtn.value) {
+      buttonClickHandler(event, fahrenheitBtn, celciusBtn);
+      handleWeatherDataDisplay.changeDisplayTempUnits();
+    }
   });
 };
 
@@ -105,31 +108,3 @@ const unitSelectionEventHandler = () => {
   searchEventHandler();
   unitSelectionEventHandler();
 })();
-
-// (async () => {
-//   let city;
-//   const searchTerm = "Auburn wa";
-//   try {
-//     city = await geocodingAPIRequest.fetchGeocoding(searchTerm);
-//   } catch (error) {
-//     console.log(error.message);
-//     return handleError(error);
-//   }
-
-//   let currentLocalWeather;
-//   // console.log(city);
-//   try {
-//     currentLocalWeather = await weatherInfoAPIRequest.fetchCurrentWeather(city[0].lat, city[0].lon);
-//   } catch (error) {
-//     return handleError(error);
-//   }
-
-//   let fiveDayForcast;
-//   try {
-//     fiveDayForcast = await weatherInfoAPIRequest.fetchFiveDayForcast(city[0].lat, city[0].lon);
-//   } catch (error) {
-//     return handleError(error);
-//   }
-//   console.log("Current Weather: ", currentLocalWeather);
-//   return console.log("Five Day Forcast: ", fiveDayForcast);
-// })();
