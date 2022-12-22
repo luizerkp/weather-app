@@ -12,6 +12,10 @@ body {
     font-family: 'Segoe UI', 'Open Sans', 'Helvetica Neue', sans-serif;
 } 
 
+p {
+  margin: 10px 0;
+}
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -111,6 +115,32 @@ ul {
       rgba(0, 5, 44, 0.09) 0px 32px 16px;
 
 }
+.current-weather-info{
+  display: flex;
+}
+
+
+.city-name {
+  font-size: 3rem;
+  font-weight: bolder;
+  
+}
+
+.current-temperature {
+  font-size: 7rem;
+  font-weight: bolder;
+}
+
+.current-temperature span {
+  font-size: 1.8rem;
+  vertical-align: text-top;
+}
+
+.current-weather-conditions {
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding-left: 15px
+}
 
 /* Sticky Footer and credit */
 .footer {
@@ -118,7 +148,7 @@ ul {
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
-    height: 50px;
+    height: 75px;
     gap: 8px;
     font-weight: bold;
     color: white;

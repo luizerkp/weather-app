@@ -46,9 +46,9 @@ const getCityWeatherInfo = async (searchTerm) => {
   const { lat } = cityGeocodingInfo[0];
   const { lon } = cityGeocodingInfo[0];
   const currentWeather = await getCurrentWeather(lat, lon);
-  const fiveDayWatherForcastData = await getFiveDayForcast(lat, lon);
+  const fiveDayWeatherForcastData = await getFiveDayForcast(lat, lon);
 
-  return handleWeatherDataDisplay.displayWeather(city, currentWeather, fiveDayWatherForcastData);
+  return handleWeatherDataDisplay.displayWeather(city, currentWeather, fiveDayWeatherForcastData);
 };
 
 const searchEventHandler = () => {

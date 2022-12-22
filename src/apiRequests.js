@@ -167,12 +167,13 @@ const weatherInfoAPIRequest = (() => {
 
     return directions[directionIndex];
   };
+  const convertMetersPerSecondToKilometerPerHour = (speed) => Math.round(speed * 3.6);
 
   const processWeatherData = (data) => {
     const cleanedWeatherData = {
       main: roundObjValues(cleanForcastMainData(data.main)),
       wind: {
-        speed: Math.round(data.wind.speed),
+        speed: convertMetersPerSecondToKilometerPerHour(data.wind.speed),
         direction: convertToCardinalDirection(data.wind.deg),
       },
       weather: data.weather,
@@ -187,7 +188,8 @@ const weatherInfoAPIRequest = (() => {
     return cleanedWeatherData;
   };
 
-  const fetchCurrentWeather = async (lat, lon, units = "imperial") => {
+  const fetchCurrentWeather = async (lat, lon) => {
+    const units = "metric";
     let weatherAPIResponse;
     try {
       weatherAPIResponse = await fetch(
