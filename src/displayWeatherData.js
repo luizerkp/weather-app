@@ -1,38 +1,10 @@
-const convertCelciusToFarenheit = (temp) => {
-  const newtemp = Math.round(temp * (9 / 5) + 32);
-  return newtemp;
-};
-const convertFahrenheitToCelcius = (temp) => {
-  const newTemp = Math.round((temp - 32) * (5 / 9));
-  return newTemp;
-};
-
-// const convertKilometersPerHourToMilesPerHour = (speed) => {
-//   const conversion = 1.609344;
-//   const newSpeed = Math.round(speed / conversion);
-//   return newSpeed;
-// };
-
-// const convertMilesPerHourToKilometersPerHour = (speed) => {
-//   const conversion = 1.609344;
-//   const newSpeed = Math.round(speed * conversion);
-//   return newSpeed;
-// };
-
-const handleTemperatureDisplay = (temperatureDisplay, temp, selectedUnit) => {
-  const span = document.createElement("span");
-  const units = {
-    fahrenheit: "\u2109",
-    celcius: "\u2103",
-  };
-
-  temperatureDisplay.textContent = temp;
-
-  span.textContent = units[selectedUnit];
-  temperatureDisplay.appendChild(span);
-  // console.log(temperatureDisplay.textContent);
-  return temperatureDisplay;
-};
+import {
+  convertCelciusToFarenheit,
+  convertFahrenheitToCelcius,
+  convertKilometersPerHourToMilesPerHour,
+  convertMilesPerHourToKilometersPerHour,
+  handleTemperatureDisplay,
+} from "./helpers";
 
 const displayForcast = (() => {
   const displayFiveDayForcast = (city, fiveDayForcast) => {
@@ -51,24 +23,64 @@ const displayCurrent = (() => {
     const temperature = document.querySelector(".current-temperature");
     const selectedUnit = document.querySelector("#selected").value;
 
-    // display temp in fahrenheit or celcius based on whether user selected fahrenheit or celcius
+    const feelsLike = document.querySelector(".feels-like");
+    const currentRangeHigh = document.querySelector(".current-range-high");
+    const currentRangeLow = document.querySelector(".current-range-low");
+    const currentWindsSpeed = document.querySelector(".wind-speed");
+    const currentWindDirection = document.querySelector(".wind-direction");
+
+    const humidity = document.querySelector(".humidity");
+    const sunrise = document.querySelector(".sunrise");
+    const sunset = document.querySelector(".sunset");
+
+    const weatherIcon = document.createElement("i");
+
+    // makes use of the weather icons package from https://erikflowers.github.io/weather-icons/api-list.html i.e. <i class="wi wi-night-sleet"></i> with open weather icons having the class "wi-owm-{openweather icon id}"
+    const currentWeatherIconClass = `wi-owm-${currentWeather.weather[0].id}`;
+    const wi = "wi";
+    weatherIcon.classList.add(wi);
+    weatherIcon.classList.add(currentWeatherIconClass);
+
+    // convert temp to fahrenheit or leave as celcius based on whether user selected
     const tempConversion = {
-      fahrenheit: convertCelciusToFarenheit(currentWeather.main.temp),
-      celcius: currentWeather.main.temp,
+      fahrenheit: convertCelciusToFarenheit,
+      celcius: (temp) => temp,
     };
 
-    // display wind speed in metric or imperial based on whether user selected fahrenheit or celcius
-    // const windSpeedConversion = {
-    //   fahrenheit: convertKilometersPerHourToMilesPerHour,
-    //   celcius: currentWeather.wind.speed,
-    // }
+    // convert wind speed to mph or leave as kph based on whether user selected fahrenheit or celcius
+    const windSpeedConversion = {
+      fahrenheit: convertKilometersPerHourToMilesPerHour,
+      celcius: (speed) => speed,
+    };
 
-    const temperatureDisplay = handleTemperatureDisplay(temperature, tempConversion[selectedUnit], selectedUnit);
+    const speedUnits = {
+      fahrenheit: "mph",
+      celcius: "kph",
+    };
 
     cityName.textContent = city;
     weatherConditons.textContent = currentWeather.weather[0].description;
+    weatherConditons.appendChild(weatherIcon);
+
+    const temperatureDisplay = handleTemperatureDisplay(
+      temperature,
+      tempConversion[selectedUnit](currentWeather.main.temp),
+      selectedUnit
+    );
 
     temperature.replaceWith(temperatureDisplay);
+
+    feelsLike.textContent = tempConversion[selectedUnit](currentWeather.main.feels_like);
+    currentRangeHigh.textContent = tempConversion[selectedUnit](currentWeather.main.temp_max);
+    currentRangeLow.textContent = tempConversion[selectedUnit](currentWeather.main.temp_min);
+    currentWindsSpeed.textContent = `${
+      windSpeedConversion[selectedUnit](currentWeather.wind.speed) + speedUnits[selectedUnit]
+    }`;
+    currentWindDirection.textContent = currentWeather.wind.direction;
+    humidity.textContent = `${`${currentWeather.humidity}%`}`;
+    sunrise.textContent = currentWeather.sunrise;
+    sunset.textContent = currentWeather.sunset;
+
     console.log(city, currentWeather);
   };
 
@@ -81,10 +93,21 @@ const handleWeatherDataDisplay = (() => {
   const changeCurrentTempDisplay = () => {
     const currentTemperature = document.querySelector(".current-temperature");
     const selectedUnit = document.querySelector("#selected").value;
+    const currentRangeHigh = document.querySelector(".current-range-high");
+    const currentRangeLow = document.querySelector(".current-range-low");
+    const feelsLike = document.querySelector(".feels-like");
+    const windSpeed = document.querySelector(".wind-speed");
 
     // remove degree symbol from current temp: regex matches \u2109 (℉) and \u2103 (℃) and replace with ''
     const temp = currentTemperature.textContent.replace(/[\u2109\u2103]+/g, "");
 
+    const tempHigh = currentRangeHigh.textContent;
+    const tempLow = currentRangeLow.textContent;
+    const feelsLikeTemp = feelsLike.textContent;
+
+    const speed = windSpeed.textContent.replace(/\D+/g, "");
+
+    // console.log(speed);
     // console.log(temp);
 
     const tempConversion = {
@@ -92,14 +115,29 @@ const handleWeatherDataDisplay = (() => {
       celcius: convertFahrenheitToCelcius,
     };
 
-    // const windSpeedConversion = {
-    //   fahrenheit: convertKilometersPerHourToMilesPerHour,
-    //   celcius: convertMilesPerHourToKilometersPerHour,
-    // }
+    const windSpeedConversion = {
+      fahrenheit: convertKilometersPerHourToMilesPerHour,
+      celcius: convertMilesPerHourToKilometersPerHour,
+    };
+
+    const speedUnits = {
+      fahrenheit: "mph",
+      celcius: "kph",
+    };
 
     const newTemperature = tempConversion[selectedUnit](temp);
+    const newTemperatureHigh = tempConversion[selectedUnit](tempHigh);
+    const newTemperatureLow = tempConversion[selectedUnit](tempLow);
+    const newFeelsLikeTemp = tempConversion[selectedUnit](feelsLikeTemp);
+
+    const newSpeed = windSpeedConversion[selectedUnit](speed);
 
     const newTemperatureDisplay = handleTemperatureDisplay(currentTemperature, newTemperature, selectedUnit);
+
+    currentRangeHigh.textContent = newTemperatureHigh;
+    currentRangeLow.textContent = newTemperatureLow;
+    feelsLike.textContent = newFeelsLikeTemp;
+    windSpeed.textContent = `${newSpeed + speedUnits[selectedUnit]}`;
 
     return currentTemperature.replaceWith(newTemperatureDisplay);
   };

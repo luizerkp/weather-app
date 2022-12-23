@@ -117,18 +117,24 @@ ul {
 }
 .current-weather-info{
   display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-
+.current-weather-details {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .city-name {
   font-size: 3rem;
   font-weight: bolder;
-  
 }
 
 .current-temperature {
   font-size: 7rem;
   font-weight: bolder;
+  margin-right: 1rem;
 }
 
 .current-temperature span {
@@ -137,9 +143,26 @@ ul {
 }
 
 .current-weather-conditions {
-  font-size: 1.5rem;
-  font-weight: bold;
-  padding-left: 15px
+  font-size: 1.8rem;
+  font-weight:600;
+}
+.current-weather-conditions i {
+  padding-left: 10px;
+}
+
+.secondary-weather-info {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: center;
+  border-left: solid white;
+  padding-left: 2rem;
+  margin: 30px 0;
+  font-size: 1.25rem;
+}
+
+.secondary-weather-info span {
+  padding-left: 8px;
 }
 
 /* Sticky Footer and credit */
@@ -152,7 +175,6 @@ ul {
     gap: 8px;
     font-weight: bold;
     color: white;
-    /* background-color: #d8dee2; */
 }
 
 #github-logo {

@@ -1,4 +1,5 @@
 import "./css/normalize.css";
+import "./css/weather-icons.css";
 import "material-icons/iconfont/round.css";
 import "./css/style.css";
 import footer from "./footerContent";
@@ -42,9 +43,9 @@ const getCityGeocodeInfo = async (searchTerm) => {
 
 const getCityWeatherInfo = async (searchTerm) => {
   const cityGeocodingInfo = await getCityGeocodeInfo(searchTerm);
-  const { city } = cityGeocodingInfo[0];
-  const { lat } = cityGeocodingInfo[0];
-  const { lon } = cityGeocodingInfo[0];
+  const { city } = cityGeocodingInfo;
+  const { lat } = cityGeocodingInfo;
+  const { lon } = cityGeocodingInfo;
   const currentWeather = await getCurrentWeather(lat, lon);
   const fiveDayWeatherForcastData = await getFiveDayForcast(lat, lon);
 

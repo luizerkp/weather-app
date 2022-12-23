@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { convertToCardinalDirection, convertMetersPerSecondToKilometerPerHour, roundObjValues } from "./helpers";
 
 // get Weather icons `http://openweathermap.org/img/w/${icon}.png`
 
@@ -7,17 +8,13 @@ const geocodingAPIRequest = (() => {
   const APIKey = "W4cIzkPzZLkpSBNgL3geH4JyljGuNRYD";
 
   const processGeoData = (results) => {
-    // console.log(results);
-    const cleanedData = [];
-    results.forEach((result) => {
-      const locationObj = {
-        city: result.address.freeformAddress,
-        country: result.address.country,
-        lat: result.position.lat,
-        lon: result.position.lon,
-      };
-      cleanedData.push(locationObj);
-    });
+    // api fetch is limited to one which results in the one result with the heighest confidense
+    // returned in array of size 1
+    const cleanedData = {
+      city: `${results[0].address.freeformAddress} ${results[0].address.countryCodeISO3}`,
+      lat: results[0].position.lat,
+      lon: results[0].position.lon,
+    };
     return cleanedData;
   };
 
@@ -53,20 +50,6 @@ const geocodingAPIRequest = (() => {
 
 const weatherInfoAPIRequest = (() => {
   const APIKey = "02fc8c5e0612a90cae215d46fdd00bdc";
-  const roundObjValues = (obj) => {
-    if (typeof obj !== "object") {
-      return obj;
-    }
-
-    const roundedObjValues = {};
-    Object.entries(obj).forEach(([key, value]) => {
-      const roundedValue = {};
-      roundedValue[key] = Math.round(value);
-      Object.assign(roundedObjValues, roundedValue);
-    });
-
-    return roundedObjValues;
-  };
 
   const cleanForcastMainData = (data) => {
     const cleanedData = {
@@ -144,34 +127,9 @@ const weatherInfoAPIRequest = (() => {
     return fiveDayCleanedForcast;
   };
 
-  const convertToCardinalDirection = (deg) => {
-    const directions = [
-      "N",
-      "NNE",
-      "NE",
-      "ENE",
-      "E",
-      "ESE",
-      "SE",
-      "SSE",
-      "S",
-      "SSE",
-      "SW",
-      "WSW",
-      "W",
-      "WNW",
-      "NW",
-      "NNW",
-    ];
-    const directionIndex = Math.round(deg / 22.5) % 16;
-
-    return directions[directionIndex];
-  };
-  const convertMetersPerSecondToKilometerPerHour = (speed) => Math.round(speed * 3.6);
-
   const processWeatherData = (data) => {
     const cleanedWeatherData = {
-      main: roundObjValues(cleanForcastMainData(data.main)),
+      main: roundObjValues(data.main),
       wind: {
         speed: convertMetersPerSecondToKilometerPerHour(data.wind.speed),
         direction: convertToCardinalDirection(data.wind.deg),
@@ -210,7 +168,7 @@ const weatherInfoAPIRequest = (() => {
 
   const fetchFiveDayForcast = async (lat, lon) => {
     let weatherAPIResponse;
-    const units = "imperial";
+    const units = "metric";
     try {
       weatherAPIResponse = await fetch(
         `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}&units=${units}`,
