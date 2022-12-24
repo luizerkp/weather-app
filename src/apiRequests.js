@@ -103,15 +103,14 @@ const weatherInfoAPIRequest = (() => {
 
       let highestMaxTemp = Number.NEGATIVE_INFINITY;
       let lowestMinTemp = Number.POSITIVE_INFINITY;
-      let highestFeelsLike = Number.NEGATIVE_INFINITY;
+
       value.forEach((item) => {
         highestMaxTemp = item.main.temp_max > highestMaxTemp ? item.main.temp_max : highestMaxTemp;
         lowestMinTemp = item.main.temp_min < lowestMinTemp ? item.main.temp_min : lowestMinTemp;
-        highestFeelsLike = item.main.feels_like > highestFeelsLike ? item.main.feels_like : highestFeelsLike;
       });
       const cleanedData = {
         day,
-        temp: { temp_max: highestMaxTemp, temp_min: lowestMinTemp, feels_like: highestFeelsLike },
+        temp: { temp_max: highestMaxTemp, temp_min: lowestMinTemp },
         weather: { start: weatherStart, end: weatherEnd },
       };
 
