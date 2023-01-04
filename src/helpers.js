@@ -1,3 +1,10 @@
+export const geocodingAPIKey = "W4cIzkPzZLkpSBNgL3geH4JyljGuNRYD";
+export const weatherAPIKey = "02fc8c5e0612a90cae215d46fdd00bdc";
+export const speedUnits = {
+  fahrenheit: "mph",
+  celcius: "kph",
+};
+
 export const convertMetersPerSecondToKilometerPerHour = (speed) => Math.round(speed * 3.6);
 
 export const convertToCardinalDirection = (deg) => {
@@ -81,4 +88,16 @@ export const handleTemperatureDisplay = (temperatureDisplay, temp, selectedUnit)
   temperatureDisplay.appendChild(span);
 
   return temperatureDisplay;
+};
+
+export const handleWeatherIcon = (id) => {
+  const weatherIcon = document.createElement("i");
+
+  // makes use of the weather icons package from https://erikflowers.github.io/weather-icons/api-list.html i.e. <i class="wi wi-night-sleet"></i> with open weather icons having the class "wi-owm-{openweather icon id}"
+  const currentWeatherIconClass = `wi-owm-${id}`;
+  const wi = "wi";
+  weatherIcon.classList.add(wi);
+  weatherIcon.classList.add(currentWeatherIconClass);
+
+  return weatherIcon;
 };

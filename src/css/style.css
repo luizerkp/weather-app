@@ -74,9 +74,11 @@ p {
 
 #main-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   flex: 1 0 auto;
+  margin:  0 10vw;
 }
 
 ul {
@@ -163,6 +165,56 @@ ul {
 
 .secondary-weather-info span {
   padding-left: 8px;
+}
+
+.forcast-container {
+  display: flex;
+  width: 90vw;
+  justify-content: space-evenly;
+
+}
+
+.forcast-day-container {
+  display: flex;
+  flex-direction: column;
+}
+.day-title {
+  font-size: 2rem;
+  font-weight: bold;
+}
+.forcast-day-icon {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.temperature-range {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; 
+  align-items: center; 
+}
+
+.temperature-max {
+  font-weight: bolder;
+  font-size: 2rem;
+}
+
+.temperature-min {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.temperature-max span, .temperature-min span {
+  font-size: 1rem;
+  vertical-align: super;
+  padding-left: 2px;
+}
+
+.weather-icon {
+  font-size: 1.75rem;
+  font-weight: bold;
 }
 
 /* Sticky Footer and credit */

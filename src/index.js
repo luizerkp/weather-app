@@ -3,7 +3,7 @@ import "./css/weather-icons.css";
 import "material-icons/iconfont/round.css";
 import "./css/style.css";
 import footer from "./footerContent";
-import { weatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
+import { currentWeatherInfoAPIRequest, forcastWeatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
 import handleWeatherDataDisplay from "./displayWeatherData";
 
 function handleError(error) {
@@ -13,19 +13,19 @@ function handleError(error) {
 const getFiveDayForcast = async (lat, lon) => {
   let fiveDayForcast;
   try {
-    fiveDayForcast = await weatherInfoAPIRequest.fetchFiveDayForcast(lat, lon);
+    fiveDayForcast = await forcastWeatherInfoAPIRequest.fetchFiveDayForcast(lat, lon);
   } catch (error) {
-    return handleError(error);
+    throw new Error(error);
   }
   return fiveDayForcast;
 };
 const getCurrentWeather = async (lat, lon) => {
   let currentLocalWeather;
-  // console.log(city);
+
   try {
-    currentLocalWeather = await weatherInfoAPIRequest.fetchCurrentWeather(lat, lon);
+    currentLocalWeather = await currentWeatherInfoAPIRequest.fetchCurrentWeather(lat, lon);
   } catch (error) {
-    return handleError(error);
+    throw new Error(error);
   }
   return currentLocalWeather;
 };
@@ -34,20 +34,37 @@ const getCityGeocodeInfo = async (searchTerm) => {
   try {
     city = await geocodingAPIRequest.fetchGeocoding(searchTerm);
   } catch (error) {
-    console.log(error.message);
-    return handleError(error);
+    throw new Error(error);
   }
 
   return city;
 };
 
 const getCityWeatherInfo = async (searchTerm) => {
-  const cityGeocodingInfo = await getCityGeocodeInfo(searchTerm);
+  let cityGeocodingInfo;
+  try {
+    cityGeocodingInfo = await getCityGeocodeInfo(searchTerm);
+  } catch (error) {
+    return handleError(error);
+  }
+
   const { city } = cityGeocodingInfo;
   const { lat } = cityGeocodingInfo;
   const { lon } = cityGeocodingInfo;
-  const currentWeather = await getCurrentWeather(lat, lon);
-  const fiveDayWeatherForcastData = await getFiveDayForcast(lat, lon);
+
+  let currentWeather;
+  try {
+    currentWeather = await getCurrentWeather(lat, lon);
+  } catch (error) {
+    return handleError(error);
+  }
+
+  let fiveDayWeatherForcastData;
+  try {
+    fiveDayWeatherForcastData = await getFiveDayForcast(lat, lon);
+  } catch (error) {
+    return handleError(error);
+  }
 
   return handleWeatherDataDisplay.displayWeather(city, currentWeather, fiveDayWeatherForcastData);
 };

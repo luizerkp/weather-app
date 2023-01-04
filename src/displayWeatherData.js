@@ -4,10 +4,99 @@ import {
   convertKilometersPerHourToMilesPerHour,
   convertMilesPerHourToKilometersPerHour,
   handleTemperatureDisplay,
+  speedUnits,
+  handleWeatherIcon,
 } from "./helpers";
 
 const displayForcast = (() => {
+  const buildDayTitleContainer = (dayTitle) => {
+    const dayTitleContainer = document.createElement("p");
+    dayTitleContainer.classList.add("day-title");
+    dayTitleContainer.textContent = dayTitle;
+    return dayTitleContainer;
+  };
+
+  // Data from api comes back in metric it is then converted to imperial or left as is depending on selected unit
+  const buildTemperatureRangeContainer = (temperatureMax, temperatureMin) => {
+    const temperatureRangeContainer = document.createElement("div");
+    temperatureRangeContainer.classList.add("temperature-range");
+
+    const selectedUnit = document.querySelector("#selected").value;
+
+    // convert temp to fahrenheit or leave as celcius based on whether user selected
+    const tempConversion = {
+      fahrenheit: convertCelciusToFarenheit,
+      celcius: (temp) => temp,
+    };
+
+    const paraElementMaxTemperature = document.createElement("p");
+    paraElementMaxTemperature.classList.add("temperature-max", "temperature-value");
+    const paraElementMinTemperature = document.createElement("p");
+    paraElementMinTemperature.classList.add("temperature-min", "temperature-value");
+
+    const temperatureMaxContainer = handleTemperatureDisplay(
+      paraElementMaxTemperature,
+      tempConversion[selectedUnit](temperatureMax),
+      selectedUnit
+    );
+
+    const temperatureMinContainer = handleTemperatureDisplay(
+      paraElementMinTemperature,
+      tempConversion[selectedUnit](temperatureMin),
+      selectedUnit
+    );
+
+    temperatureRangeContainer.appendChild(temperatureMaxContainer);
+    temperatureRangeContainer.appendChild(temperatureMinContainer);
+
+    return temperatureRangeContainer;
+  };
+
+  const buildIconConatiner = (iconStartId, iconEndId) => {
+    const weatherIconDiv = document.createElement("div");
+    weatherIconDiv.classList.add("forcast-day-icon");
+
+    const weatherIconStartPara = document.createElement("p");
+    const weatherIconStart = handleWeatherIcon(iconStartId);
+    weatherIconStart.classList.add("weather-icon");
+    weatherIconStartPara.appendChild(weatherIconStart);
+
+    const weatherIconEndPara = document.createElement("p");
+    const weatherIconEnd = handleWeatherIcon(iconEndId);
+    weatherIconEnd.classList.add("weather-icon");
+    weatherIconEndPara.appendChild(weatherIconEnd);
+
+    weatherIconDiv.appendChild(weatherIconStartPara);
+    weatherIconDiv.appendChild(weatherIconEndPara);
+
+    return weatherIconDiv;
+  };
+
+  const buildDayForcastContainer = (dayData) => {
+    const forcastDayContainer = document.createElement("div");
+    forcastDayContainer.classList.add(".forcast-day-container");
+
+    // console.log(dayData.temp.temp_max)
+    const title = buildDayTitleContainer(dayData.day);
+    const temperatureRange = buildTemperatureRangeContainer(dayData.temp.temp_max, dayData.temp.temp_min);
+    const weatherIcons = buildIconConatiner(dayData.weather.start[0].id, dayData.weather.end[0].id);
+    forcastDayContainer.appendChild(title);
+    forcastDayContainer.appendChild(temperatureRange);
+    forcastDayContainer.appendChild(weatherIcons);
+
+    return forcastDayContainer;
+  };
+
   const displayFiveDayForcast = (city, fiveDayForcast) => {
+    const forcastContainer = document.querySelector(".forcast-container");
+    // empty the container
+    forcastContainer.replaceChildren();
+
+    Object.entries(fiveDayForcast).forEach((day) => {
+      const forcastDayContainer = buildDayForcastContainer(day[1]);
+      forcastContainer.appendChild(forcastDayContainer);
+    });
+
     console.log(city, fiveDayForcast);
   };
   return {
@@ -33,13 +122,7 @@ const displayCurrent = (() => {
     const sunrise = document.querySelector(".sunrise");
     const sunset = document.querySelector(".sunset");
 
-    const weatherIcon = document.createElement("i");
-
-    // makes use of the weather icons package from https://erikflowers.github.io/weather-icons/api-list.html i.e. <i class="wi wi-night-sleet"></i> with open weather icons having the class "wi-owm-{openweather icon id}"
-    const currentWeatherIconClass = `wi-owm-${currentWeather.weather[0].id}`;
-    const wi = "wi";
-    weatherIcon.classList.add(wi);
-    weatherIcon.classList.add(currentWeatherIconClass);
+    const weatherIcon = handleWeatherIcon(currentWeather.weather[0].id);
 
     // convert temp to fahrenheit or leave as celcius based on whether user selected
     const tempConversion = {
@@ -51,11 +134,6 @@ const displayCurrent = (() => {
     const windSpeedConversion = {
       fahrenheit: convertKilometersPerHourToMilesPerHour,
       celcius: (speed) => speed,
-    };
-
-    const speedUnits = {
-      fahrenheit: "mph",
-      celcius: "kph",
     };
 
     cityName.textContent = city;
@@ -90,6 +168,11 @@ const displayCurrent = (() => {
 })();
 
 const handleWeatherDataDisplay = (() => {
+  const tempConversion = {
+    fahrenheit: convertCelciusToFarenheit,
+    celcius: convertFahrenheitToCelcius,
+  };
+
   const changeCurrentTempDisplay = () => {
     const currentTemperature = document.querySelector(".current-temperature");
     const selectedUnit = document.querySelector("#selected").value;
@@ -107,22 +190,9 @@ const handleWeatherDataDisplay = (() => {
 
     const speed = windSpeed.textContent.replace(/\D+/g, "");
 
-    // console.log(speed);
-    // console.log(temp);
-
-    const tempConversion = {
-      fahrenheit: convertCelciusToFarenheit,
-      celcius: convertFahrenheitToCelcius,
-    };
-
     const windSpeedConversion = {
       fahrenheit: convertKilometersPerHourToMilesPerHour,
       celcius: convertMilesPerHourToKilometersPerHour,
-    };
-
-    const speedUnits = {
-      fahrenheit: "mph",
-      celcius: "kph",
     };
 
     const newTemperature = tempConversion[selectedUnit](temp);
@@ -142,9 +212,23 @@ const handleWeatherDataDisplay = (() => {
     return currentTemperature.replaceWith(newTemperatureDisplay);
   };
 
+  const changeForcastTempDisplay = () => {
+    const currentForcastTemperatureValues = document.querySelectorAll(".temperature-value");
+    const selectedUnit = document.querySelector("#selected").value;
+
+    currentForcastTemperatureValues.forEach((temperatureValue) => {
+      const temperatureNumber = temperatureValue.textContent.replace(/[\u2109\u2103]+/g, "");
+      const newTemperature = tempConversion[selectedUnit](temperatureNumber);
+      const newTemperatureDisplay = handleTemperatureDisplay(temperatureValue, newTemperature, selectedUnit);
+      temperatureValue.replaceWith(newTemperatureDisplay);
+    });
+  };
+
   const changeDisplayTempUnits = () => {
     changeCurrentTempDisplay();
+    changeForcastTempDisplay();
   };
+
   const displayWeather = (city, currentWeather, fiveDayForcast) => {
     displayCurrent.displayCurrentWeather(city, currentWeather);
     displayForcast.displayFiveDayForcast(city, fiveDayForcast);
