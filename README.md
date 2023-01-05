@@ -1,2 +1,4 @@
 # weather-app
-A weather app that makes use of the openweather API. It allows the user to search for a city and display the weather information.
+A weather app that makes use of the openweather API for weather information and tom tom geocode API for accurate geocode information. It allows the user to search for a location and display the weather information in that location and have it displayed on screen. When the user makes a search, a request is made of the tom tom API for geocode information based on the user input. This data is then used to make a request of the openweather API using the latitdue and longitude results of the tom tom API request.
+
+In this progject I am exploring the new promise feature of ES8 "async/await", as well using the promise pattern. I also explore the fetch API for handling HTTP requests and responses. I learned how to handle errors in a promise chains and how to use the promise pattern to make a HTTP request and handling the response data. 
