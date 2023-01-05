@@ -94,7 +94,6 @@ const currentWeatherInfoAPIRequest = (() => {
     }
 
     const currentWeatherData = await weatherAPIResponse.json();
-    console.log(currentWeatherData);
     const currentWeatherInfo = processWeatherData(currentWeatherData);
 
     return currentWeatherInfo;

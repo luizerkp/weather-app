@@ -90,8 +90,6 @@ const displayForcast = (() => {
       const forcastDayContainer = buildDayForcastContainer(day[1]);
       forcastContainer.appendChild(forcastDayContainer);
     });
-
-    console.log(city, fiveDayForcast);
   };
   return {
     displayFiveDayForcast,
@@ -140,8 +138,6 @@ const displayCurrent = (() => {
     humidity.textContent = `${`${currentWeather.humidity}%`}`;
     sunrise.textContent = currentWeather.sunrise;
     sunset.textContent = currentWeather.sunset;
-
-    console.log(city, currentWeather);
   };
 
   return {

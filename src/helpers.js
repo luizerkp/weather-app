@@ -1,5 +1,6 @@
-export const geocodingAPIKey = "W4cIzkPzZLkpSBNgL3geH4JyljGuNRYD";
-export const weatherAPIKey = "02fc8c5e0612a90cae215d46fdd00bdc";
+// these API keys are from a free subscription therefore limited if using paid API keys they must be stored on the server side.
+export const geocodingAPIKey = "4xRdtzPHy21kWD6iqezRgOA4AOELXhXA";
+export const weatherAPIKey = "da161dd471dc64463ea3195c21e6ff1c";
 
 export const createError = (statusCode, statusText) => {
   const defaultErrorText = `An Error has Occured see status code ${statusCode}`;
