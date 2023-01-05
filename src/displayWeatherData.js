@@ -1,11 +1,11 @@
 import {
-  convertCelciusToFarenheit,
-  convertFahrenheitToCelcius,
-  convertKilometersPerHourToMilesPerHour,
-  convertMilesPerHourToKilometersPerHour,
   handleTemperatureDisplay,
   speedUnits,
   handleWeatherIcon,
+  defaultTempConversion,
+  defaultWindSpeedConversion,
+  tempConversion,
+  windSpeedConversion,
 } from "./helpers";
 
 const displayForcast = (() => {
@@ -23,12 +23,6 @@ const displayForcast = (() => {
 
     const selectedUnit = document.querySelector("#selected").value;
 
-    // convert temp to fahrenheit or leave as celcius based on whether user selected
-    const tempConversion = {
-      fahrenheit: convertCelciusToFarenheit,
-      celcius: (temp) => temp,
-    };
-
     const paraElementMaxTemperature = document.createElement("p");
     paraElementMaxTemperature.classList.add("temperature-max", "temperature-value");
     const paraElementMinTemperature = document.createElement("p");
@@ -36,13 +30,13 @@ const displayForcast = (() => {
 
     const temperatureMaxContainer = handleTemperatureDisplay(
       paraElementMaxTemperature,
-      tempConversion[selectedUnit](temperatureMax),
+      defaultTempConversion[selectedUnit](temperatureMax),
       selectedUnit
     );
 
     const temperatureMinContainer = handleTemperatureDisplay(
       paraElementMinTemperature,
-      tempConversion[selectedUnit](temperatureMin),
+      defaultTempConversion[selectedUnit](temperatureMin),
       selectedUnit
     );
 
@@ -74,7 +68,7 @@ const displayForcast = (() => {
 
   const buildDayForcastContainer = (dayData) => {
     const forcastDayContainer = document.createElement("div");
-    forcastDayContainer.classList.add(".forcast-day-container");
+    forcastDayContainer.classList.add("forcast-day-container");
 
     // console.log(dayData.temp.temp_max)
     const title = buildDayTitleContainer(dayData.day);
@@ -124,35 +118,23 @@ const displayCurrent = (() => {
 
     const weatherIcon = handleWeatherIcon(currentWeather.weather[0].id);
 
-    // convert temp to fahrenheit or leave as celcius based on whether user selected
-    const tempConversion = {
-      fahrenheit: convertCelciusToFarenheit,
-      celcius: (temp) => temp,
-    };
-
-    // convert wind speed to mph or leave as kph based on whether user selected fahrenheit or celcius
-    const windSpeedConversion = {
-      fahrenheit: convertKilometersPerHourToMilesPerHour,
-      celcius: (speed) => speed,
-    };
-
     cityName.textContent = city;
     weatherConditons.textContent = currentWeather.weather[0].description;
     weatherConditons.appendChild(weatherIcon);
 
     const temperatureDisplay = handleTemperatureDisplay(
       temperature,
-      tempConversion[selectedUnit](currentWeather.main.temp),
+      defaultTempConversion[selectedUnit](currentWeather.main.temp),
       selectedUnit
     );
 
     temperature.replaceWith(temperatureDisplay);
 
-    feelsLike.textContent = tempConversion[selectedUnit](currentWeather.main.feels_like);
-    currentRangeHigh.textContent = tempConversion[selectedUnit](currentWeather.main.temp_max);
-    currentRangeLow.textContent = tempConversion[selectedUnit](currentWeather.main.temp_min);
+    feelsLike.textContent = defaultTempConversion[selectedUnit](currentWeather.main.feels_like);
+    currentRangeHigh.textContent = defaultTempConversion[selectedUnit](currentWeather.main.temp_max);
+    currentRangeLow.textContent = defaultTempConversion[selectedUnit](currentWeather.main.temp_min);
     currentWindsSpeed.textContent = `${
-      windSpeedConversion[selectedUnit](currentWeather.wind.speed) + speedUnits[selectedUnit]
+      defaultWindSpeedConversion[selectedUnit](currentWeather.wind.speed) + speedUnits[selectedUnit]
     }`;
     currentWindDirection.textContent = currentWeather.wind.direction;
     humidity.textContent = `${`${currentWeather.humidity}%`}`;
@@ -168,11 +150,6 @@ const displayCurrent = (() => {
 })();
 
 const handleWeatherDataDisplay = (() => {
-  const tempConversion = {
-    fahrenheit: convertCelciusToFarenheit,
-    celcius: convertFahrenheitToCelcius,
-  };
-
   const changeCurrentTempDisplay = () => {
     const currentTemperature = document.querySelector(".current-temperature");
     const selectedUnit = document.querySelector("#selected").value;
@@ -189,11 +166,6 @@ const handleWeatherDataDisplay = (() => {
     const feelsLikeTemp = feelsLike.textContent;
 
     const speed = windSpeed.textContent.replace(/\D+/g, "");
-
-    const windSpeedConversion = {
-      fahrenheit: convertKilometersPerHourToMilesPerHour,
-      celcius: convertMilesPerHourToKilometersPerHour,
-    };
 
     const newTemperature = tempConversion[selectedUnit](temp);
     const newTemperatureHigh = tempConversion[selectedUnit](tempHigh);

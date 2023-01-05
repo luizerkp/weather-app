@@ -6,37 +6,34 @@ import footer from "./footerContent";
 import { currentWeatherInfoAPIRequest, forcastWeatherInfoAPIRequest, geocodingAPIRequest } from "./apiRequests";
 import handleWeatherDataDisplay from "./displayWeatherData";
 
-function handleError(error) {
-  console.log(error.message);
-}
+const handleError = (error) => {
+  const errorDisplay = document.querySelector("#error-msg");
+  const searchForm = document.querySelector("#search-form");
+  errorDisplay.textContent = error.message;
+  searchForm.classList.add("shake-search-form");
+  // animation is set to .8s this remove the shake-search-form class after 800 millisecs so that it can be triggered again
+  setTimeout(() => {
+    searchForm.classList.remove("shake-search-form");
+  }, 800);
+
+  // if a status code is available log it the console
+  if (error.status) {
+    console.log(error.status);
+  }
+};
 
 const getFiveDayForcast = async (lat, lon) => {
-  let fiveDayForcast;
-  try {
-    fiveDayForcast = await forcastWeatherInfoAPIRequest.fetchFiveDayForcast(lat, lon);
-  } catch (error) {
-    throw new Error(error);
-  }
+  const fiveDayForcast = await forcastWeatherInfoAPIRequest.fetchFiveDayForcast(lat, lon);
   return fiveDayForcast;
 };
-const getCurrentWeather = async (lat, lon) => {
-  let currentLocalWeather;
 
-  try {
-    currentLocalWeather = await currentWeatherInfoAPIRequest.fetchCurrentWeather(lat, lon);
-  } catch (error) {
-    throw new Error(error);
-  }
+const getCurrentWeather = async (lat, lon) => {
+  const currentLocalWeather = await currentWeatherInfoAPIRequest.fetchCurrentWeather(lat, lon);
   return currentLocalWeather;
 };
-const getCityGeocodeInfo = async (searchTerm) => {
-  let city;
-  try {
-    city = await geocodingAPIRequest.fetchGeocoding(searchTerm);
-  } catch (error) {
-    throw new Error(error);
-  }
 
+const getCityGeocodeInfo = async (searchTerm) => {
+  const city = await geocodingAPIRequest.fetchGeocoding(searchTerm);
   return city;
 };
 
@@ -72,8 +69,15 @@ const getCityWeatherInfo = async (searchTerm) => {
 const searchEventHandler = () => {
   const searchForm = document.querySelector("#search-form");
   const searchBar = document.querySelector("#search-bar");
+  const errorDisplay = document.querySelector("#error-msg");
+
   searchForm.addEventListener("submit", (e) => {
     e.preventDefault();
+    // clear any previously displayed error msg
+    if (errorDisplay.textContent.length > 0) {
+      errorDisplay.textContent = "";
+    }
+
     const searchQuery = searchBar.value.trim();
     if (searchQuery.length < 1) {
       return;

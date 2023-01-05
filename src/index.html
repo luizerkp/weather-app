@@ -20,13 +20,16 @@
       <div class="unit-select">
         <button type="button" class="fahrenheit" value="fahrenheit" id="selected">&#8457;</button>
         <button type="button" class="celcius" value="celcius">&#8451;</button>
+      </div>
+      <div class="search-div">
+        <form id="search-form" role="search">
+          <input type="search" name="search-bar" id ="search-bar" required 
+          placeholder="City, State / City, Country"
+          aria-label="Search for Weather conditions in input City">
+          <button type="submit" id="search-btn"><span class="material-icons-round" id="search-icon">search</span></button>
+        </form>
+        <p id="error-msg"></p>        
       </div>             
-      <form id="search-form" role="search">
-        <input type="search" name="search-bar" id ="search-bar" required 
-        placeholder="City, State / City, Country"
-        aria-label="Search for Weather conditions in input City">
-        <button type="submit" id="search-btn"><span class="material-icons-round" id="search-icon">search</span></button>
-      </form>
     </header>
     <main id="main-container">
       <div class="current-weather-info">
@@ -67,9 +70,8 @@
           <div class="forcast-day-icon">
             <div class="icon-start"></div>  
             <div class="icon-end"></div>          
-          </div>           -->
+          </div> -->
         </div>
-      </div>
     </main>
   </body>
 </html>

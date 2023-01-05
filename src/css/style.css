@@ -29,15 +29,23 @@ p {
   gap: 10px;
   justify-content: center;
   align-items: center;
+  margin: 0 20px;
 }
 
 .logo {
   height: 44px;
 }
 
-.hidden {
-  opacity: 0;
-  height: 0;
+.search-div {
+  display: flex;
+  flex-direction: column;
+  margin: 20px 0;
+}
+
+#error-msg {
+  font-size: 1rem;
+  font-weight: bold;
+  opacity: .9;
 }
 
 #search-form {
@@ -45,6 +53,31 @@ p {
   justify-content: center;
   align-items: center;
   gap: 10px;
+}
+
+.shake-search-form {
+  animation: shake .8s ease-in;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translate(.2em);
+  }
+  10%,
+  30%,
+  50% {
+    transform: translate(-.2em);
+  }
+  70%,
+  100% {
+    transform: translate(0);
+  }
 }
 
 #search-bar {
@@ -89,9 +122,8 @@ ul {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
   font-size: 1.5rem;
-  
+
 }
 .unit-select button {
 	background: none;
@@ -99,6 +131,7 @@ ul {
 	border: none;
 	cursor: pointer;
   padding: 10px 30px;
+  margin: 20px 0;
 }
 
 #selected {
@@ -169,8 +202,9 @@ ul {
 
 .forcast-container {
   display: flex;
-  width: 90vw;
-  justify-content: space-evenly;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
 
 }
 
@@ -235,29 +269,142 @@ ul {
 }
 
 /* ########################################## Responsive layout ########################################################*/
-/* @media only screen and (max-width: 1200px) {
+@media only screen and (max-width: 800px) {
+  .header {
+    flex-direction: column;
+  }
+  .current-weather-intro {
+    text-align: center;
+  }
+  .city-name {
+    font-size: 2rem;
+    font-weight: bold;
+  }
 
-}
+  .current-weather-conditions {
+    font-size: 1.2rem;
+    font-weight: 400;
+  }
 
-@media only screen and (max-width: 650px) {
+  .current-temperature {
+    font-size: 3rem;
+    font-weight: bolder;
+    margin-right: .8rem;
+  }
 
+  .current-temperature span {
+    font-size: 1.25rem;
+  }
+
+  .current-weather-details {
+    flex-direction: column;
+  }
+
+  .secondary-weather-info {
+    border-top: solid white;
+    padding-top: 1rem;
+    border-left: none;
+    padding-left: 0;
+    margin: 0 15px;
+    font-size: 1.25rem;
+  }
+  
+  .forcast-container {
+    flex-direction: column;
+    max-width: min-content;
+
+  }
+
+  .forcast-day-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    
+  }
+
+  .day-title {
+    font-size: 1.5rem;
+  }
+
+  .temperature-range {
+    flex-direction: row;
+    gap: 10px;
+  }
+
+  .temperature-max, .temperature-min {
+    font-size: 1.25rem;
+  }
+
+  .temperature-max span, .temperature-min span {
+    font-size: .8rem;
+  }
+
+  .forcast-day-icon {
+    gap: 10px;
+  }
 }
 
 @media only screen and (max-width: 500px) {
-
-    #github-logo>img {
-        height: 20px;
-        width: 20px;
-    }
+  #github-logo>img {
+      height: 20px;
+      width: 20px;
+  }
+  .footer {
+    display: grid;
+    grid-template-columns: 1fr .2fr 1fr;
+    gap: 0px;
+  }    
+  .footer>p {
+      font-size: 14px;
+      margin: 8px;
+  }
 }
 
- @media only screen and (max-width: 325px) {
+ @media only screen and (max-width: 475px) {
 
-    .footer>p {
-        font-size: 14px;
-        margin: 8px;
-    }
- } */
+  #main-container {
+    margin: 0 2vw;
+  }
+
+  h1 {
+    font-size: 1.5em;
+  }
+
+  #search-bar {
+    padding: .7rem;
+  }
+
+  #search-icon {
+    font-size: 2rem;
+  }
+
+  .secondary-weather-info {
+    font-size: 1rem;
+    gap: .8rem;
+    margin: 0 5px;
+  }
+
+  .day-title {
+    font-size: 1.2rem;
+  }
+
+  .temperature-max, .temperature-min {
+    font-size: 1rem;
+  }
+
+  .temperature-max span, .temperature-min span {
+    font-size: .7rem;
+  }
+
+  .weather-icon {
+    font-weight: normal;
+    font-size: 1.2rem;
+  }
+
+ }
+
 html {
   display: block;
 }

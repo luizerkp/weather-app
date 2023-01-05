@@ -5,6 +5,7 @@ import {
   roundObjValues,
   geocodingAPIKey,
   weatherAPIKey,
+  createError,
 } from "./helpers";
 
 const geocodingAPIRequest = (() => {
@@ -31,18 +32,19 @@ const geocodingAPIRequest = (() => {
         { mode: "cors" }
       );
       if (!geocoderAPIResponse.ok) {
-        throw new Error(geocoderAPIResponse.status);
+        throw geocoderAPIResponse;
       }
     } catch (error) {
-      throw new Error(error.message);
+      const newError = createError(error.status, error.statusText);
+      throw newError;
     }
 
     const geocoderAPIResponseData = await geocoderAPIResponse.json();
 
     if (geocoderAPIResponseData.results.length < 1) {
-      throw new Error("Location not Found");
+      throw new Error("Location not found");
     }
-    console.log("hio2");
+
     const geocodeInfo = processGeoData(geocoderAPIResponseData.results);
 
     return geocodeInfo;
@@ -84,10 +86,11 @@ const currentWeatherInfoAPIRequest = (() => {
         { mode: "cors" }
       );
       if (!weatherAPIResponse.ok) {
-        throw new Error(weatherAPIResponse.status);
+        throw weatherAPIResponse;
       }
     } catch (error) {
-      throw new Error(`httpStatusCode: ${error.message}`);
+      const newError = createError(error.status, error.statusText);
+      throw newError;
     }
 
     const currentWeatherData = await weatherAPIResponse.json();
@@ -170,10 +173,11 @@ const forcastWeatherInfoAPIRequest = (() => {
         { mode: "cors" }
       );
       if (!weatherAPIResponse.ok) {
-        throw new Error(weatherAPIResponse.status);
+        throw weatherAPIResponse;
       }
     } catch (error) {
-      throw new Error(`httpStatusCode: ${error.message}`);
+      const newError = createError(error.status, error.statusText);
+      throw newError;
     }
 
     const fiveDayWeatherData = await weatherAPIResponse.json();
