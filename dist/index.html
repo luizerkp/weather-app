@@ -6,7 +6,6 @@
     <link rel="apple-touch-icon" sizes="180x180" href="a3227b2efd06089c939d.png">
     <link rel="icon" type="image/png" sizes="32x32" href="77c1690ac0e483dbdb62.png">
     <link rel="icon" type="image/png" sizes="16x16" href="ca53f322d9562111e8ba.png">
-    <link rel="manifest" href="1c337fa2fa1515591f8d.webmanifest">
     <title>Weather.app</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Prevent flash of unstyled content and oppacity 0 elements from showing on load-->
@@ -19,34 +18,61 @@
         <h1>The Weather App</h1>
       </div>
       <div class="unit-select">
-        <div class="fahrenheit-select">
-          <input type="radio" name="&#8457;" data-symbol="\u2109" id="fahrenheit" checked>
-          <label for="&#8457;">&#8457;</label>          
-        </div>
-        <div class="clecius-select">
-          <input type="radio" name="&#8451;" data-symbol="\u2103" id="celcius">
-          <label for="">&#8451;</label>          
-        </div>
+        <button type="button" class="fahrenheit" value="fahrenheit" id="selected">&#8457;</button>
+        <button type="button" class="celcius" value="celcius">&#8451;</button>
+      </div>
+      <div class="search-div">
+        <form id="search-form" role="search">
+          <input type="search" name="search-bar" id ="search-bar" required 
+          placeholder="City, State / City, Country"
+          aria-label="Search for Weather conditions in input City">
+          <button type="submit" id="search-btn"><span class="material-icons-round" id="search-icon">search</span></button>
+        </form>
+        <p id="error-msg"></p>        
       </div>             
-      <form id="search-form" role="search">
-        <input type="search" name="search-bar" id ="search-bar" required 
-        placeholder="Weather in your city"
-        aria-label="Search for Weather conditions in input City">
-        <button type="submit" id="search-btn"><span class="material-icons-round" id="search-icon">search</span></button>
-      </form>
     </header>
     <main id="main-container">
       <div class="current-weather-info">
-        <div class="primary-weather-info">
-          <h2 class="city-name"></h2>
-          <p  class="weather-conditions"></p>
-          <p class="temperature"></p>
+        <div class="current-weather-intro">
+          <p class="city-name"></p>
+          <p  class="current-weather-conditions"></p>
         </div>
-        <div class="secondary-weather-info" >
-        </div>        
+        <div class="current-weather-details">
+        <div class="primary-weather-info">
+          <p class="current-temperature"></p>
+        </div>
+        <div class="secondary-weather-info">
+          <div class="secondary-weather-info-1">
+            <p>
+              Feels Like:<span class="feels-like"></span>
+            </p>
+            <p>
+              H:<span class="current-range-high"></span>
+              | L:<span class="current-range-low"></span>
+            </p>
+            <p>Wind: <Span class="wind-speed"></Span><span class="wind-direction"></span></p>
+          </div>
+          <div class="secondary-weather-info-2">
+            <p>Humidity: <span class="humidity"></span></p>
+            <p>Sunrise: <span class="sunrise"></span></p>
+            <p>Sunset: <span class="sunset"></span></p>
+          </div>
+        </div>           
+        </div>
       </div>
-
-      <div class="detailed-view hidden"> <h1>This Stuff is hidden for now</h1></div>
+      <div class="forcast-container">
+        <!-- Template layout for each day container -->
+        <!-- <div class="forcast-day-container">
+          <div class="day-title"></div>
+          <div class="temperature-range">
+            <div class="temperature-max"></div>
+            <div class="temperature-min"></div>
+          </div>
+          <div class="forcast-day-icon">
+            <div class="icon-start"></div>  
+            <div class="icon-end"></div>          
+          </div> -->
+        </div>
     </main>
   </body>
 </html>
