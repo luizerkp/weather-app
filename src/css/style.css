@@ -353,8 +353,8 @@ ul {
   }
 
   .footer {
-    display: grid;
-    grid-template-columns: 1fr .2fr 1fr;
+    flex-direction: column;
+    margin-top: 20px;
     gap: 0px;
   }    
   .footer>p {
